@@ -208,7 +208,7 @@ dialog::backdrop { background: #20161089; }
 /* Face positions measured in the portrait artwork. */
 .helper, .scene-art[data-speaker="helper"] { --focus-x: 34%; --focus-y: 45%; }
 .historian, .scene-art[data-speaker="historian"] { --focus-x: 68%; --focus-y: 46%; }
-.mara, .scene-art[data-speaker="mara"] { --focus-x: 40%; --focus-y: 52%; }
+.mara, .scene-art[data-speaker="mara"] { --focus-x: 61%; --focus-y: 48%; }
 .hotspot {
   left: clamp(calc((100% - 100cqw) / 2 + 3.45rem), var(--focus-x), calc((100% + 100cqw) / 2 - 3.45rem));
   top: calc(var(--focus-y) - 1rem);
@@ -496,7 +496,7 @@ html, body { overflow: hidden; overscroll-behavior: none; }
   text-align: center;
 }
 .library-pin { left: 15.74%; top: 67.709%; max-width: 28%; }
-.confluence-pin { left: 55.742%; top: 69.16%; }
+.confluence-pin { left: 67%; top: 64.5%; }
 .pin-tack {
   position: absolute;
   top: 0;

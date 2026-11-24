@@ -94,12 +94,12 @@ function render() {
   const narrating = activePerson === narrator;
   const park = state.atPark && !narrating;
   const shot = narrating ? narrator.shots[lineIndex] : null;
-  const source = shot?.source ?? (park ? './assets/confluence-daylight.webp' : './assets/library-atrium-daylight.webp');
+  const source = shot?.source ?? (park ? './assets/confluence-viewpoint.webp' : './assets/library-atrium-daylight.webp');
   if (sceneImage.getAttribute('src') !== source) sceneImage.src = source;
-  sceneImage.alt = shot?.alt ?? (park ? 'Pixel-art Confluence park with Mara Vale on a bench' : 'Pixel-art Calgary Central Library atrium');
+  sceneImage.alt = shot?.alt ?? (park ? 'Mara Vale sitting on a stone beside an interpretive plaque at the Confluence Viewpoint' : 'Pixel-art Calgary Central Library atrium');
   get('archive-clue').hidden = !shot?.showsClue;
   stage.classList.toggle('park', park);
-  get('scene-title').textContent = park ? 'The Confluence' : 'Calgary Central Library';
+  get('scene-title').textContent = park ? 'Confluence Viewpoint' : 'Calgary Central Library';
   get('scene-district').textContent = narrating ? 'Archives' : park ? 'Bow and Elbow rivers' : 'East Village';
   get('library-hotspots').hidden = park || narrating || !state.introduced;
   get('mara-hotspot').hidden = !park;
@@ -110,7 +110,7 @@ function render() {
   get('lead').textContent = park
     ? state.mara
       ? 'Mara remembers the short branch drawn in the margin. Her clue is saved in the Journal.'
-      : 'Mara Vale is sitting by the path. Ask whether she recognizes the mark from the recovered page.'
+      : 'Mara Vale is sitting on a stone near the plaque. Ask whether she recognizes the mark from the recovered page.'
     : state.hint
       ? 'Two currents, one from the west and one from the south.'
       : '“Where the two rivers meet.”';
@@ -342,7 +342,7 @@ get('scanner').addEventListener('folio:reveal', async (event) => {
   state.folio = true;
   state.atPark = true;
   save();
-  get('announcement').textContent = 'You arrived at The Confluence. The night inventory was added to your Journal.';
+  get('announcement').textContent = 'You arrived at the Confluence Viewpoint. The night inventory was added to your Journal.';
   get('page-state').textContent = 'Item obtained · A-17';
 
   const startPose = reducedMotion.matches ? null : pagePose(corners, artwork.width, artwork.height);
