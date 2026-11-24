@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" class="title-screen-open">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#171b16">
+<meta name="robots" content="noindex">
+<title>The Missing Folio</title>
+<link rel="stylesheet" href="./style.css?v=daylight-art">
+<script type="importmap">
+{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}
+</script>
+<script type="module" src="./app.js?v=folio-flight"></script>
+<script type="module" src="./game.js?v=barracks-clue"></script>
+</head>
+<body>
+<main id="title-screen" class="title-screen" aria-labelledby="game-title">
+  <img class="title-backdrop" src="./assets/title-east-village.webp" alt="" fetchpriority="high">
+  <video id="title-loop" class="title-backdrop title-loop" data-src="./assets/title-east-village-loop.mp4"
+    muted loop playsinline preload="none" aria-hidden="true"></video>
+  <h1 id="game-title" class="title-logo"><img src="./assets/missing-folio-wordmark.png" alt="The Missing Folio" width="1040" height="260"></h1>
+  <button id="join-mystery" type="button" class="button join-mystery"
+    aria-controls="activation-form" aria-expanded="false" disabled>Join the Mystery</button>
+  <form id="activation-form" class="activation-card" novalidate hidden>
+    <button id="activation-close" type="button" class="icon-button activation-close" aria-label="Close activation panel">×</button>
+    <label for="activation-code">Activation code</label>
+    <input id="activation-code" type="text" inputmode="numeric" autocomplete="off"
+      spellcheck="false" required aria-describedby="activation-error">
+    <button id="enter-game" class="button button-gold" type="submit" disabled>Enter the Game</button>
+    <p id="activation-error" class="activation-error" aria-live="polite"></p>
+    <button id="code-help" type="button" class="text-button code-help">Don't have a code? Click here</button>
+    <p id="code-availability" class="code-availability" role="status"></p>
+  </form>
+</main>
+<div id="title-transition" class="title-transition" aria-hidden="true" hidden></div>
+
+<main id="field" class="field" aria-label="The Missing Folio" hidden inert>
+  <section id="game-stage" class="scene-art" aria-label="Location">
+    <div class="scene-artwork">
+      <img id="scene-image" src="./assets/library-atrium-daylight.webp" alt="Pixel-art Calgary Central Library atrium">
+      <div id="archive-clue" class="archive-clue-layer" aria-hidden="true" hidden>
+        <div class="archive-clue-ink">
+          <svg viewBox="0 0 80 64" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M40 56c-8-5-16-5-26-2l-3-26c11-4 20-2 29 3 9-5 18-7 29-3l-3 26c-10-3-18-3-26 2Zm0-25v25M19 35c6-1 10 0 15 2m-14 5c6-1 10 0 14 2"/>
+            <path d="m42 23 17 18 6-5 4 4-7 7-4-4-19-17M42 23a8 8 0 1 0-3 3"/>
+          </svg>
+          <span>Where the two<br>rivers meet</span>
+        </div>
+      </div>
+      <div id="library-hotspots" hidden>
+        <button class="hotspot helper" data-person="helper">Leah Chen</button>
+        <button class="hotspot historian" data-person="historian">Daniel Lau</button>
+      </div>
+      <button id="mara-hotspot" class="hotspot mara" data-person="mara" hidden>Mara Vale</button>
+    </div>
+    <div class="scene-shade"></div>
+    <header class="scene-hud">
+      <div class="scene-label">
+        <p class="eyebrow" id="scene-district">East Village</p>
+        <h1 id="scene-title" tabindex="-1">Calgary Central Library</h1>
+      </div>
+      <nav class="game-actions" aria-label="Game tools">
+        <button id="start" class="icon-button hud-button" aria-label="Scan the secret symbol" title="Scan the secret symbol" aria-controls="scanner">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5m-7-8h8"/><path d="M12 9v6"/></svg>
+        </button>
+        <button id="map-open" class="icon-button hud-button" aria-label="Map" title="Map" aria-controls="map">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14"/></svg>
+        </button>
+        <button id="journal-open" class="icon-button hud-button" aria-label="Journal" title="Journal" aria-controls="journal">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h13v18H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 0v14m-2 0h13M11 7h5m-5 4h5"/></svg>
+          <span id="journal-count" class="journal-count" aria-hidden="true">0</span>
+        </button>
+      </nav>
+    </header>
+    <section id="conversation" class="visual-novel" role="dialog" aria-modal="true" aria-labelledby="speaker" aria-describedby="speech" hidden>
+      <div id="dialogue-card" class="dialogue-card">
+        <div class="speaker-plate">
+          <h2 id="speaker"></h2>
+          <p id="speaker-role"></p>
+        </div>
+        <p id="speech" aria-live="polite"></p>
+        <span class="advance-note" aria-hidden="true">Continue <span>▾</span></span>
+        <button id="dialogue-next" class="surface-button" aria-label="Advance dialogue" aria-describedby="speech"></button>
+      </div>
+      <div id="item-reveal" class="item-reveal" hidden>
+        <div class="reward-art">
+          <img src="./assets/library-sticker.webp" alt="" width="320" height="320">
+        </div>
+        <p class="eyebrow">Item acquired</p>
+        <h2 id="reward-title">Calgary Public Library Sticker</h2>
+        <p id="reward-note">Added to your Journal inventory.</p>
+        <span class="advance-note" aria-hidden="true">Continue <span>▾</span></span>
+        <button id="reward-done" class="surface-button" aria-label="Dismiss item reveal"></button>
+      </div>
+    </section>
+    <div id="scene-blackout" class="scene-blackout" aria-hidden="true" hidden></div>
+  </section>
+  <p class="sr-only" id="announcement" role="status"></p>
+</main>
+
+<dialog id="map" class="panel map-window" aria-labelledby="map-title">
+  <header>
+    <form method="dialog"><button class="icon-button dialog-close" aria-label="Close map" autofocus>×</button></form>
+    <h2 id="map-title">Map</h2>
+  </header>
+  <aside class="field-map" aria-label="Illustrated map of East Village, Calgary">
+    <div class="map-plate">
+      <img class="map-illustration" src="./assets/east-village-survey.webp" width="1260" height="1560"
+        alt="Map of Calgary’s East Village showing the Bow and Elbow rivers, St. Patrick’s Island, and surrounding streets and pathways">
+      <section class="field-note" aria-labelledby="objective">
+        <span class="eyebrow">Current lead</span>
+        <h2 id="objective">Follow the mark</h2>
+        <p id="lead">“Where the two rivers meet.”</p>
+      </section>
+      <div class="map-marker library-pin" id="library-location" aria-current="location">
+        <span class="pin-tack" aria-hidden="true"></span>
+        <span class="map-place">Calgary Central Library</span>
+      </div>
+      <div class="map-marker confluence-pin" id="park-location" hidden>
+        <span class="pin-tack" aria-hidden="true"></span>
+        <span class="map-place">The Confluence</span>
+      </div>
+    </div>
+    <p class="map-credit">Contains information licensed under the <a href="https://data.calgary.ca/stories/s/u45n-7awa/" target="_blank" rel="noopener">Open Government Licence – City of Calgary</a>.</p>
+  </aside>
+</dialog>
+
+<dialog id="journal" class="panel journal" aria-labelledby="journal-title">
+  <header>
+    <form method="dialog"><button class="icon-button dialog-close" aria-label="Close journal" autofocus>×</button></form>
+    <p class="eyebrow">Case notes</p>
+    <h2 id="journal-title">Journal</h2>
+  </header>
+  <div class="tabs" aria-label="Journal sections">
+    <button data-section="pages" class="tab" aria-pressed="true">Discovered pages <span id="page-count">0</span></button>
+    <button data-section="inventory" class="tab" aria-pressed="false">Inventory <span id="item-count">0</span></button>
+  </div>
+  <div id="journal-body" class="journal-body">
+    <section id="journal-pages" aria-label="Discovered pages"></section>
+    <section id="journal-inventory" aria-label="Inventory" hidden></section>
+    <p class="journal-footer">
+      <button id="intro-open" class="text-button">Read introduction</button>
+      <a id="seal-download" href="./assets/archive-seal-a17.png" download>Download test seal</a>
+      <button id="restart-open" class="text-button">Restart playtest</button>
+    </p>
+  </div>
+</dialog>
+
+<dialog id="restart" class="panel" aria-labelledby="restart-title">
+  <h2 id="restart-title">Restart the playtest?</h2>
+  <p>This clears the pages, clues, and sticker saved in this browser and takes you back to the library introduction.</p>
+  <form method="dialog" class="restart-actions">
+    <button class="button button-outline" autofocus>Keep playing</button>
+    <button id="restart-confirm" type="button" class="button button-gold">Start over</button>
+  </form>
+</dialog>
+
+<dialog id="scanner" class="panel scanner" aria-labelledby="mode">
+  <div class="scanner-bar">
+    <h2 id="mode">Scan the secret symbol</h2>
+    <button id="close" class="icon-button" aria-label="Close scanner">×</button>
+  </div>
+  <div class="camera-frame">
+    <div id="camera" class="camera"></div>
+    <div id="finder" class="finder" aria-hidden="true"></div>
+  </div>
+  <div class="scan-message">
+    <p id="status" role="status">Starting camera…</p>
+  </div>
+</dialog>
+
+<dialog id="recovered" class="paper reading-sheet" aria-labelledby="page-title">
+  <div class="reading-content">
+    <div id="folio-landing" class="folio-landing" aria-hidden="true" hidden></div>
+    <p class="eyebrow" id="page-state">Recovered page · A-17</p>
+    <h2 id="page-title">The night inventory</h2>
+    <p>At six, I counted eighteen entries in the ledger. At seven, there were seventeen. Someone had removed the entire page and put the binding back together.</p>
+    <p>If you find the copy, look for the river drawn in the margin. Find the branch that ends abruptly.</p>
+    <p class="signature">— E.</p>
+    <span class="advance-note" aria-hidden="true">Continue <span>▾</span></span>
+    <button id="file-page" class="surface-button" aria-label="Continue from recovered page"></button>
+  </div>
+</dialog>
+<dialog id="portrait-notice" class="portrait-notice" aria-labelledby="portrait-title">
+  <h2 id="portrait-title">Play in portrait mode</h2>
+  <p>Rotate your device upright or resize your browser window to continue.</p>
+</dialog>
+</body>
+</html>
